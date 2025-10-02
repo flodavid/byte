@@ -234,6 +234,8 @@ public class Widgets.Queue : Gtk.Revealer {
         });
 
         Byte.player.current_track_changed.connect ((track) => {
+            Byte.settings.set_int ("last-played", track.id);
+
             int current_index = Byte.utils.get_track_index_by_id (track.id, items);
 
             listbox.set_filter_func ((row) => {

@@ -86,6 +86,15 @@ public class MainWindow : Gtk.Window {
                 main_stack.visible_child_name = "welcome_view";
                 headerbar.visible_ui = false;
             } else {
+                int last_played_id = Byte.settings.get_int ("last-played");
+                if (last_played_id != 0) {
+                    Objects.Track? last_played_track = Byte.database.get_track_by_id (last_played_id);
+                    if (last_played_track != null) {
+                        print ("Restoring last played track: %s\n", last_played_track.title);
+                        Byte.player.set_track (last_played_track);
+                    }
+                }
+
                 main_stack.visible_child_name = "library_view";
 
                 Byte.navCtrl.go_root ();
