@@ -150,7 +150,7 @@ public class Views.Artist : Gtk.EventBox {
         listbox.row_activated.connect ((row) => {
             var item = row as Widgets.TrackRow;
             
-            Byte.utils.play_queue_start_with_track (all_tracks, QUEUE_TYPE, item.track);
+            Byte.utils.play_queue_start_with_track (all_tracks, QUEUE_TYPE, item.track, 0, artist.id);
         });
 
         flowbox.child_activated.connect ((child) => {

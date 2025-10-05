@@ -123,6 +123,12 @@
 			<summary>Last track played</summary>
 			<description>ID of the last track that was played, to restore it after restart</description>
 		</key>
+
+		<key name="track-progression" type="d">
+			<default>0.0</default>
+			<summary>Play progression</summary>
+			<description>Progression of the last track that was played, to restore it after restart</description>
+		</key>
 		
 		<key name="queue-type" enum="com.github.alainm23.byte.queue-type">
 			<default>"None"</default>
