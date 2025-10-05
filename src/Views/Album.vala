@@ -169,7 +169,7 @@ public class Views.Album : Gtk.EventBox {
         listbox.row_activated.connect ((row) => {
             var item = row as Widgets.TrackAlbumRow;
             
-            Byte.utils.play_queue_start_with_track (all_tracks, QUEUE_TYPE, item.track);
+            Byte.utils.play_queue_start_with_track (all_tracks, QUEUE_TYPE, item.track, 0, album.id);
         });
 
         play_button.clicked.connect (() => {

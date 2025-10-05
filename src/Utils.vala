@@ -1,7 +1,8 @@
 public class Utils : GLib.Object {
     public Gee.ArrayList<Objects.Track?> queue_playlist { set; get; }
 
-    public signal void play_items (Gee.ArrayList<Objects.Track?> items, Objects.Track? track, int queue_type, int queue_id);
+    public signal void play_items (Gee.ArrayList<Objects.Track?> items, Objects.Track? track, int queue_type,
+        int queue_id, double progress);
 
     public signal void update_next_track ();
     public signal void add_next_track (Gee.ArrayList<Objects.Track?> items);
@@ -30,7 +31,7 @@ public class Utils : GLib.Object {
     }
 
     public void set_items (Gee.ArrayList<Objects.Track?> all_items, bool shuffle_mode, Objects.Track? track,
-        int queue_type = 0, int queue_id = 0
+        int queue_type = 0, double progress = 0, int queue_id = 0
     ) {
         if (all_items.size > 0) {
             if (shuffle_mode) {
@@ -48,7 +49,7 @@ public class Utils : GLib.Object {
                 Byte.settings.set_boolean ("shuffle-mode", false);
             }
 
-            play_items (queue_playlist, track, queue_type, queue_id);
+            play_items (queue_playlist, track, queue_type, queue_id, progress);
         }
     }
 
@@ -66,7 +67,7 @@ public class Utils : GLib.Object {
                 queue_playlist = playlist_order (queue_playlist);
             }
 
-            play_items (queue_playlist, Byte.player.current_track, -1, -1);
+            play_items (queue_playlist, Byte.player.current_track, -1, -1, 0.0);
             update_next_track ();
         }
     }
@@ -399,28 +400,36 @@ public class Utils : GLib.Object {
         granite_settings.notify["prefers-color-scheme"].disconnect (apply_system_theme);
     }
 
-    public void play_queue_start_with_track_by_id (Gee.ArrayList<Objects.Track?> tracks, int queue_type, int track_id) {
+    public void play_queue_start_with_track_by_id (Gee.ArrayList<Objects.Track?> tracks, int queue_type,
+        int track_id, double progress, int queue_id = 0
+    ) {
         Objects.Track? track = find_track (tracks, track_id);
 
         if (track == null) play_queue (tracks, queue_type, Byte.settings.get_boolean ("shuffle-mode"));
-        else play_queue_start_with_track (tracks, queue_type, track);
+        else play_queue_start_with_track (tracks, queue_type, track, progress, queue_id);
     }
 
-    public void play_queue_start_with_track (Gee.ArrayList<Objects.Track?> tracks, int queue_type, Objects.Track track) {
-        Byte.utils.set_items (
+    public void play_queue_start_with_track (Gee.ArrayList<Objects.Track?> tracks, int queue_type, Objects.Track track,
+        double progress = 0, int queue_id = 0
+    ) {
+        set_items (
             tracks,
             Byte.settings.get_boolean ("shuffle-mode"),
             track,
-            queue_type
+            queue_type,
+            progress,
+            queue_id
         );
     }
 
-    public void play_queue (Gee.ArrayList<Objects.Track?> tracks, int queue_type, bool shuffled) {
-        Byte.utils.set_items (
+    public void play_queue (Gee.ArrayList<Objects.Track?> tracks, int queue_type, bool shuffled, int queue_id = 0) {
+        set_items (
             tracks,
             shuffled,
             null,
-            queue_type
+            queue_type,
+            0,
+            queue_id
         );
     }
 
