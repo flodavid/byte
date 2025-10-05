@@ -196,7 +196,7 @@ public class Widgets.Queue : Gtk.Revealer {
 
         add (main_box);
 
-        Byte.utils.play_items.connect ((_items, _track) => {
+        Byte.utils.play_items.connect ((_items, _track, queue_type, queue_id) => {
             listbox.foreach ((widget) => {
                 widget.destroy ();
             });
@@ -211,6 +211,11 @@ public class Widgets.Queue : Gtk.Revealer {
             }
 
             add_all_items (items);
+        
+            if (queue_type != -1) {
+                Byte.settings.set_enum ("queue-type", queue_type);
+                Byte.settings.set_int ("queue-id", queue_id);   
+            }
 
             if (_track == null) {
                 Byte.player.set_track (items [0]);
