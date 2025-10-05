@@ -130,6 +130,12 @@
 			<description>Type of queue that was used, to restore it after restart</description>
 		</key>
 		
+		<key name="queue-id" type="i">
+			<default>0</default>
+			<summary>Queue Type</summary>
+			<description>Type of queue that was used, to restore it after restart</description>
+		</key>
+		
 		<key name="window-position" type="(ii)">
 			<default>(-1, -1)</default>
 			<summary>Window position</summary>

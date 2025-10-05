@@ -86,14 +86,7 @@ public class MainWindow : Gtk.Window {
                 main_stack.visible_child_name = "welcome_view";
                 headerbar.visible_ui = false;
             } else {
-                int last_played_id = Byte.settings.get_int ("last-played");
-                if (last_played_id != 0) {
-                    Objects.Track? last_played_track = Byte.database.get_track_by_id (last_played_id);
-                    if (last_played_track != null) {
-                        print ("Restoring last played track: %s\n", last_played_track.title);
-                        Byte.player.set_track (last_played_track);
-                    }
-                }
+                restore_playing_state ();
 
                 main_stack.visible_child_name = "library_view";
 
@@ -206,5 +199,60 @@ public class MainWindow : Gtk.Window {
         });
 
         return base.configure_event (event);
+    }
+
+    /**
+     * Restore last playing state
+     */
+    private void restore_playing_state () {
+        int queue_type_id = Byte.settings.get_enum ("queue-type");
+        int queue_id = Byte.settings.get_int ("queue-id");
+        int last_played_id = Byte.settings.get_int ("last-played");
+
+        switch (queue_type_id) {
+            case 1: // RecentlyAdded
+                print ("Restore playing recently added\n");
+                Byte.utils.play_queue_start_with_track_by_id (home_view.all_tracks, 1, last_played_id);
+                break;
+            case 2: // Songs
+                print ("Restore playing all songs\n");
+                var tracks_view = new Views.Tracks ();
+                Byte.utils.play_queue_start_with_track_by_id (tracks_view.all_tracks, 2, last_played_id);
+                break;
+            case 3: // Playlist
+                Objects.Playlist playlist = Byte.database.get_playlist_by_id (queue_id);
+                print ("Restoring last played playlist: %s\n", playlist.title);
+                var playlist_view = new Views.Playlist (playlist);
+                Byte.utils.play_queue_start_with_track_by_id (playlist_view.all_tracks, 3, last_played_id);
+                break;
+            case 4: // Album
+                Objects.Album album = Byte.database.get_album_by_id (queue_id);
+                print ("Restoring last played album: %s\n", album.title);
+                var album_view = new Views.Album (album);
+                Byte.utils.play_queue_start_with_track_by_id (album_view.all_tracks, 4, last_played_id);
+                break;
+            case 5: // Artist
+                Objects.Artist artist = Byte.database.get_artist_by_id (queue_id);
+                print ("Restoring last played artist: %s\n", artist.name);
+                var artist_view = new Views.Artist (artist);
+                Byte.utils.play_queue_start_with_track_by_id (artist_view.all_tracks, 5, last_played_id);
+                break;
+            case 6: // Favorites
+                print ("Restore playing favorites\n");
+                var favorites_view = new Views.Favorites ();
+                Byte.utils.play_queue_start_with_track_by_id (favorites_view.all_tracks, 6, last_played_id);
+                break;
+            //  case 7: // Radio
+            //      break;
+            default: // None
+                if (last_played_id != 0) {
+                    Objects.Track? last_played_track = Byte.database.get_track_by_id (last_played_id);
+                    if (last_played_track != null) {
+                        print ("Restoring last played track: %s\n", last_played_track.title);
+                        Byte.player.set_track (last_played_track);
+                    }
+                }
+                break;
+        }
     }
 }
