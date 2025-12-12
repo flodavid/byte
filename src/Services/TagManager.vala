@@ -19,7 +19,8 @@ public class Services.TagManager : GLib.Object {
 
             if (info.get_result () != Gst.PbUtils.DiscovererResult.OK) {
                 if (err != null) {
-                    warning ("DISCOVER ERROR: '%d' %s %s\n(%s)", err.code, err.message, info.get_result ().to_string (), uri);
+                    // Printing err.message would often triggers Segmentation fault for some reason
+                    warning ("DISCOVER ERROR: '%d' %s\n(%s)", err.code, info.get_result ().to_string (), uri);
                 }
             } else {
                 var tags = info.get_tags ();
@@ -124,7 +125,7 @@ public class Services.TagManager : GLib.Object {
                     if (artist.name.strip () == "") {
                         var dir = Path.get_dirname (Path.get_dirname (uri));
                         if (dir != null) {
-                            artist.name = Path.get_basename (dir);
+                            artist.name = GLib.Uri.unescape_string (Path.get_basename (dir));
                         } else {
                             artist.name = unknown;
                         }

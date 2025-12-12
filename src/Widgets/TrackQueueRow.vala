@@ -40,7 +40,7 @@ public class Widgets.TrackQueueRow : Gtk.ListBoxRow {
 
         artist_album_label = new Gtk.Label (track.artist_name);
         artist_album_label.halign = Gtk.Align.START;
-        artist_album_label.use_markup = true;
+        artist_album_label.use_markup = false;
         artist_album_label.valign = Gtk.Align.START;
         artist_album_label.max_width_chars = 40;
         artist_album_label.ellipsize = Pango.EllipsizeMode.END;

@@ -5,7 +5,6 @@ sdk: io.elementary.Sdk
 command: com.github.alainm23.byte
 finish-args:
   - '--filesystem=xdg-music'
-
   - '--socket=fallback-x11'
   - '--socket=wayland'
   - '--socket=pulseaudio'
