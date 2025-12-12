@@ -64,7 +64,7 @@ public class Widgets.Queue : Gtk.Revealer {
         notification_primary_label.margin_start = 6;
         notification_primary_label.valign = Gtk.Align.END;
         notification_primary_label.halign = Gtk.Align.START;
-        notification_primary_label.use_markup = true;
+        notification_primary_label.use_markup = false;
         notification_primary_label.get_style_context ().add_class ("label-color-primary");
         notification_primary_label.get_style_context ().add_class ("font-bold");
 
@@ -72,7 +72,7 @@ public class Widgets.Queue : Gtk.Revealer {
         notification_secondary_label.margin_start = 6;
         notification_secondary_label.valign = Gtk.Align.START;
         notification_secondary_label.halign = Gtk.Align.START;
-        notification_secondary_label.use_markup = true;
+        notification_secondary_label.use_markup = false;
         notification_secondary_label.max_width_chars = 31;
         notification_secondary_label.ellipsize = Pango.EllipsizeMode.END;
 
@@ -253,14 +253,16 @@ public class Widgets.Queue : Gtk.Revealer {
             if (next_track != null) {
                 reveal_child = true;
 
-                next_track_name.label = _("%s <b>by</b> %s").printf (next_track.title, next_track.artist_name);
+                next_track_name.label = _("%s <b>by</b> %s").printf (GLib.Markup.escape_text (next_track.title), GLib.Markup.escape_text (next_track.artist_name));
                 next_track_grid.tooltip_text = "%s - %s".printf (next_track.artist_name, next_track.title);
 
                 try {
                     var cover_path = GLib.Path.build_filename (Byte.utils.COVER_FOLDER, ("track-%i.jpg").printf (next_track.id));
                     image_cover.pixbuf = new Gdk.Pixbuf.from_file_at_size (cover_path, 27, 27);
                 } catch (Error e) {
-                    image_cover.pixbuf = new Gdk.Pixbuf.from_file_at_size ("/usr/share/com.github.alainm23.byte/track-default-cover.svg", 27, 27);
+                    if (GLib.FileUtils.test ("/usr/share/com.github.alainm23.byte/track-default-cover.svg", GLib.FileTest.IS_REGULAR)) {
+                        image_cover.pixbuf = new Gdk.Pixbuf.from_file_at_size ("/usr/share/com.github.alainm23.byte/track-default-cover.svg", 27, 27);
+                    }
                     stderr.printf ("Error setting default avatar icon: %s ", e.message);
                 }
             } else {

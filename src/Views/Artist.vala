@@ -101,23 +101,26 @@ public class Views.Artist : Gtk.EventBox {
         
         show_all ();
 
-        Timeout.add (250, () => {
+        Timeout.add_once (250, () => {
             int width = main_box.get_allocated_width ();
             int height = main_box.get_allocated_height ();
 
             print ("width: %i\n".printf (width));
             print ("height: %i\n".printf (height));
 
-            var pixbuf = new Gdk.Pixbuf.from_file (
-                GLib.Path.build_filename (Byte.utils.COVER_FOLDER, ("artist-%i.jpg").printf (artist.id))
-            );
+            var artist_cover = GLib.Path.build_filename (Byte.utils.COVER_FOLDER, ("artist-%i.jpg").printf (artist.id));
+            if (GLib.FileUtils.test (artist_cover, GLib.FileTest.IS_REGULAR)) {
+                var pixbuf = new Gdk.Pixbuf.from_file (artist_cover);
 
-            if (height < width) {
-                var pix = pixbuf.scale_simple (width, width, Gdk.InterpType.BILINEAR);
-                image_cover.pixbuf = new Gdk.Pixbuf.subpixbuf (pix, 0, (int)(pix.height - height) / 2, width, height);
+                if (height < width) {
+                    var pix = pixbuf.scale_simple (width, width, Gdk.InterpType.BILINEAR);
+                    image_cover.pixbuf = new Gdk.Pixbuf.subpixbuf (pix, 0, (int)(pix.height - height) / 2, width, height);
+                } else {
+                    var pix = pixbuf.scale_simple (height, height, Gdk.InterpType.BILINEAR);
+                    image_cover.pixbuf = new Gdk.Pixbuf.subpixbuf (pix, (int)(pix.width - width) / 2, 0, width, height);
+                }
             } else {
-                var pix = pixbuf.scale_simple (height, height, Gdk.InterpType.BILINEAR);
-                image_cover.pixbuf = new Gdk.Pixbuf.subpixbuf (pix, (int)(pix.width - width) / 2, 0, width, height);
+                print ("No cover for artist %s\n", artist.name);
             }
         });
 

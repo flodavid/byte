@@ -23,7 +23,7 @@ public class Services.NavController : GLib.Object {
         pages.clear ();
         pages.add ("home_view");
 
-        if (stack != null) {
+        if (stack != null && stack.get_children ().length () > 0) {            
             stack.visible_child_name = "home_view";
         }
     }
