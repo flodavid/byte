@@ -72,15 +72,14 @@ public class SoundIndicatorPlayer : GLib.Object {
                 var metadata = new HashTable<string, Variant> (null, null);
 
                 if (track != null) {
-                    metadata.insert ("mpris:artUrl", Byte.utils.get_cover_file (track.id));
+                    if (Byte.utils.cover_file_exists (track.id)) metadata.insert ("mpris:artUrl", Byte.utils.get_cover_file (track.id));
+                    else metadata.insert ("mpris:artUrl", "");
                     metadata.insert ("xesam:title", track.title);
                     metadata.insert ("xesam:artist", get_simple_string_array (track.artist_name));
                 }
 
                 send_properties ("Metadata", metadata);
-            } else if (Byte.player.player_state == Gst.State.PAUSED) {
-                property = "Paused";
-            } else {
+            } else if (Byte.player.player_state == Gst.State.READY) {
                 property = "Stopped";
                 var metadata = new HashTable<string, Variant> (null, null);
                 metadata.insert("mpris:artUrl", "");
@@ -88,8 +87,6 @@ public class SoundIndicatorPlayer : GLib.Object {
                 metadata.insert("xesam:artist", new string [0]);
                 send_properties ("Metadata", metadata);
             }
-
-            send_properties ("PlaybackStatus", property);
         });
 
         Byte.player.current_radio_title_changed.connect ((title) => {
@@ -106,19 +103,27 @@ public class SoundIndicatorPlayer : GLib.Object {
                     }
 
                     send_properties ("Metadata", metadata);
-                } else if (Byte.player.player_state == Gst.State.PAUSED) {
-                    property = "Paused";
-                } else {
-                    property = "Stopped";
+                } else if (Byte.player.player_state == Gst.State.READY) {
                     var metadata = new HashTable<string, Variant> (null, null);
                     metadata.insert("mpris:artUrl", "");
                     metadata.insert("xesam:title", "");
                     metadata.insert("xesam:artist", new string [0]);
                     send_properties ("Metadata", metadata);
                 }
-        
-                send_properties ("PlaybackStatus", property);
             }
+        });
+
+        Byte.player.state_changed.connect ((state) => {
+            Variant property;
+            if (Byte.player.player_state == Gst.State.PLAYING) {
+                property = "Playing";
+            } else if (Byte.player.player_state == Gst.State.PAUSED) {
+                property = "Paused";
+            } else {
+                property = "Stopped";
+            }
+    
+            send_properties ("PlaybackStatus", property);
         });
     }
 
