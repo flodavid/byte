@@ -79,12 +79,15 @@ public class Widgets.AlbumRow : Gtk.ListBoxRow {
             Idle.add (() => {
                 if (album_id == album.id) {
                     try {
-                        image_cover.pixbuf = new Gdk.Pixbuf.from_file_at_size (
-                            GLib.Path.build_filename (Byte.utils.COVER_FOLDER, ("album-%i.jpg").printf (album_id)), 
-                            64, 
-                            64);
+                        var album_row_cover = GLib.Path.build_filename (Byte.utils.COVER_FOLDER, ("album-%i.jpg").printf (album_id));
+                        if (GLib.FileUtils.test (album_row_cover, GLib.FileTest.IS_REGULAR)) {
+                            image_cover.pixbuf = new Gdk.Pixbuf.from_file_at_size (
+                                album_row_cover, 
+                                64, 
+                                64);
+                        }
                     } catch (Error e) {
-                        stderr.printf ("Error setting default avatar icon: %s ", e.message);
+                        stderr.printf ("Error setting album row icon: %s ", e.message);
                     }
                 }
                 

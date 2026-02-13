@@ -46,12 +46,15 @@ public class Widgets.AlbumArtistChild : Gtk.FlowBoxChild {
             Idle.add (() => {
                 if (album_id == album.id) {
                     try {
-                        image_cover.pixbuf = new Gdk.Pixbuf.from_file_at_size (
-                            GLib.Path.build_filename (Byte.utils.COVER_FOLDER, ("album-%i.jpg").printf (album_id)), 
-                            64, 
-                            64);
+                        var album_artist_cover = GLib.Path.build_filename (Byte.utils.COVER_FOLDER, ("album-%i.jpg").printf (album_id));
+                        if (GLib.FileUtils.test (album_artist_cover, GLib.FileTest.IS_REGULAR)) {
+                            image_cover.pixbuf = new Gdk.Pixbuf.from_file_at_size (
+                                album_artist_cover, 
+                                64, 
+                                64);
+                        }
                     } catch (Error e) {
-                        stderr.printf ("Error setting default avatar icon: %s ", e.message);
+                        stderr.printf ("Error setting album artist icon: %s ", e.message);
                     }
                 }
                 

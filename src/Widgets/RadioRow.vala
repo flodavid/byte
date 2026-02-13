@@ -127,12 +127,15 @@ public class Widgets.RadioRow : Gtk.ListBoxRow {
         Byte.utils.radio_image_downloaded.connect ((id) => {
             if (radio.id == id) {
                 try {
-                    image_cover.pixbuf = new Gdk.Pixbuf.from_file_at_size (
-                        GLib.Path.build_filename (Byte.utils.COVER_FOLDER, ("radio-%i.jpg").printf (id)),
-                        48,
-                        48);
+                    var radio_row_cover = GLib.Path.build_filename (Byte.utils.COVER_FOLDER, ("radio-%i.jpg").printf (id));
+                    if (GLib.FileUtils.test (radio_row_cover, GLib.FileTest.IS_REGULAR)) {
+                        image_cover.pixbuf = new Gdk.Pixbuf.from_file_at_size (
+                            radio_row_cover,
+                            48,
+                            48);
+                    }
                 } catch (Error e) {
-                    stderr.printf ("Error setting default avatar icon: %s ", e.message);
+                    stderr.printf ("Error setting radio row icon: %s ", e.message);
                 }
             }
         });
