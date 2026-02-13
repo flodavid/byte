@@ -163,10 +163,13 @@ public class Widgets.MediaControl : Gtk.Revealer {
             Idle.add (() => {
                 if (Byte.player.current_track != null && track_id == Byte.player.current_track.id) {
                     try {
-                        image_cover.pixbuf = new Gdk.Pixbuf.from_file_at_size (
-                            GLib.Path.build_filename (Byte.utils.COVER_FOLDER, ("track-%i.jpg").printf (track_id)),
-                            32,
-                            32);
+                        var cover = GLib.Path.build_filename (Byte.utils.COVER_FOLDER, ("track-%i.jpg").printf (track_id));
+                        if (GLib.FileUtils.test (cover, GLib.FileTest.IS_REGULAR)) {
+                            image_cover.pixbuf = new Gdk.Pixbuf.from_file_at_size (
+                                cover,
+                                32,
+                                32);
+                        }
                     } catch (Error e) {
                         stderr.printf ("Error setting default avatar icon: %s ", e.message);
                     }

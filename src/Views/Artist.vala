@@ -102,12 +102,15 @@ public class Views.Artist : Gtk.EventBox {
         show_all ();
 
         Timeout.add_once (250, () => {
+            if (main_box == null) return;
+
             int width = main_box.get_allocated_width ();
             int height = main_box.get_allocated_height ();
 
-            print ("width: %i\n".printf (width));
-            print ("height: %i\n".printf (height));
+            print ("width: %i, height: %i\n".printf (width, height));
 
+            if (height == 0 || width == 0 || artist == null) return;
+            
             var artist_cover = GLib.Path.build_filename (Byte.utils.COVER_FOLDER, ("artist-%i.jpg").printf (artist.id));
             if (GLib.FileUtils.test (artist_cover, GLib.FileTest.IS_REGULAR)) {
                 var pixbuf = new Gdk.Pixbuf.from_file (artist_cover);

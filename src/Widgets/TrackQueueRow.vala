@@ -144,12 +144,15 @@ public class Widgets.TrackQueueRow : Gtk.ListBoxRow {
             Idle.add (() => {
                 if (track_id == track.id) {
                     try {
-                        image_cover.pixbuf = new Gdk.Pixbuf.from_file_at_size (
-                            GLib.Path.build_filename (Byte.utils.COVER_FOLDER, ("track-%i.jpg").printf (track_id)), 
-                            32, 
-                            32);
+                        var track_queue_row_cover = GLib.Path.build_filename (Byte.utils.COVER_FOLDER, ("track-%i.jpg").printf (track_id));
+                        if (GLib.FileUtils.test (track_queue_row_cover, GLib.FileTest.IS_REGULAR)) {
+                            image_cover.pixbuf = new Gdk.Pixbuf.from_file_at_size (
+                                track_queue_row_cover, 
+                                32, 
+                                32);
+                        }
                     } catch (Error e) {
-                        stderr.printf ("Error setting default avatar icon: %s ", e.message);
+                        stderr.printf ("Error setting track queue row icon: %s ", e.message);
                     }
                 }
                 

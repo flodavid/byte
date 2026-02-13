@@ -183,7 +183,7 @@ public class Widgets.TrackRow : Gtk.ListBoxRow {
                 try {
                     grab_focus ();
                 } catch (Error e) {
-                    stderr.printf ("Error setting default avatar icon: %s ", e.message);
+                    stderr.printf ("Error grabbing focus: %s ", e.message);
                 }
             } else {
                 playing_revealer.reveal_child = false;
@@ -200,7 +200,7 @@ public class Widgets.TrackRow : Gtk.ListBoxRow {
                             32,
                             32);
                     } catch (Error e) {
-                        stderr.printf ("Error setting default avatar icon: %s ", e.message);
+                        stderr.printf ("Error setting track row icon: %s ", e.message);
                     }
                 }
 

@@ -156,7 +156,7 @@ public class Widgets.Cover : Gtk.EventBox {
             var size = pixel_size * get_scale_factor ();
             pixbuf = new Gdk.Pixbuf.from_resource_at_scale (DEFAULT_ICON, size, size, true);
         } catch (Error e) {
-            stderr.printf ("Error setting default avatar icon: %s ", e.message);
+            stderr.printf ("Error setting default cover icon: %s ", e.message);
         }
     }
 

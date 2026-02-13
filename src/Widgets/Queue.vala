@@ -263,7 +263,7 @@ public class Widgets.Queue : Gtk.Revealer {
                     if (GLib.FileUtils.test ("/usr/share/com.github.alainm23.byte/track-default-cover.svg", GLib.FileTest.IS_REGULAR)) {
                         image_cover.pixbuf = new Gdk.Pixbuf.from_file_at_size ("/usr/share/com.github.alainm23.byte/track-default-cover.svg", 27, 27);
                     }
-                    stderr.printf ("Error setting default avatar icon: %s ", e.message);
+                    stderr.printf ("Error setting queue icon: %s ", e.message);
                 }
             } else {
                 reveal_child = false;
@@ -292,7 +292,7 @@ public class Widgets.Queue : Gtk.Revealer {
                     image_cover.pixbuf = new Gdk.Pixbuf.from_file_at_size (cover_path, 27, 27);
                 } catch (Error e) {
                     image_cover.pixbuf = new Gdk.Pixbuf.from_file_at_size ("/usr/share/com.github.alainm23.byte/track-default-cover.svg", 27, 27);
-                    stderr.printf ("Error setting default avatar icon: %s ", e.message);
+                    stderr.printf ("Error setting queue icon: %s ", e.message);
                 }
             } else {
                 reveal_child = false;

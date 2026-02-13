@@ -196,12 +196,15 @@ public class Views.Album : Gtk.EventBox {
             Idle.add (() => {
                 if (_album != null && album_id == _album.id) {
                     try {
-                        image_cover.pixbuf = new Gdk.Pixbuf.from_file_at_size (
-                            GLib.Path.build_filename (Byte.utils.COVER_FOLDER, ("album-%i.jpg").printf (album_id)), 
-                            128, 
-                            128);
+                        var album_cover = GLib.Path.build_filename (Byte.utils.COVER_FOLDER, ("album-%i.jpg").printf (album_id));
+                        if (GLib.FileUtils.test (album_cover, GLib.FileTest.IS_REGULAR)) {
+                            image_cover.pixbuf = new Gdk.Pixbuf.from_file_at_size (
+                                album_cover, 
+                                128, 
+                                128);
+                        }
                     } catch (Error e) {
-                        stderr.printf ("Error setting default avatar icon: %s ", e.message);
+                        stderr.printf ("Error setting album icon: %s ", e.message);
                     }
                 }
                 

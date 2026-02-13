@@ -53,12 +53,15 @@ public class Widgets.PlaylistRow : Gtk.ListBoxRow {
         Byte.database.updated_playlist_cover.connect ((id) => {
             if (playlist.id == id) {
                 try {
-                    image_cover.pixbuf = new Gdk.Pixbuf.from_file_at_size (
-                        GLib.Path.build_filename (Byte.utils.COVER_FOLDER, ("playlist-%i.jpg").printf (playlist.id)),
-                        64,
-                        64);
+                    var playlist_row_cover = GLib.Path.build_filename (Byte.utils.COVER_FOLDER, ("playlist-%i.jpg").printf (playlist.id));
+                    if (GLib.FileUtils.test (playlist_row_cover, GLib.FileTest.IS_REGULAR)) {
+                        image_cover.pixbuf = new Gdk.Pixbuf.from_file_at_size (
+                            playlist_row_cover,
+                            64,
+                            64);
+                    }
                 } catch (Error e) {
-                    stderr.printf ("Error setting default avatar icon: %s ", e.message);
+                    stderr.printf ("Error setting playlist row icon: %s ", e.message);
                 }
             }
         });

@@ -27,7 +27,7 @@ public class Services.Notification : GLib.Object {
             
             Byte.instance.send_notification (Byte.instance.application_id, notification);
         } catch (Error e) {
-            stderr.printf ("Error setting default avatar icon: %s ", e.message);
+            stderr.printf ("Error setting track notification: %s ", e.message);
         }
     }
 
@@ -61,7 +61,7 @@ public class Services.Notification : GLib.Object {
                 }
             }
         } catch (Error e) {
-            stderr.printf ("Error setting default avatar icon: %s ", e.message);
+            stderr.printf ("Error sending radio notification: %s ", e.message);
         }
     }
 }
