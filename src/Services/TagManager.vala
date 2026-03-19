@@ -42,7 +42,7 @@ public class Services.TagManager : GLib.Object {
                         track.title = o;
                     }
 
-                    if (track.title.strip () == "") {
+                    if (track.title == null || track.title.strip () == "") {
                         track.title = Path.get_basename (uri);
                     }
                     
@@ -87,7 +87,7 @@ public class Services.TagManager : GLib.Object {
                         album.title = o;
                     }
 
-                    if (album.title.strip () == "") {
+                    if (album.title == null || album.title.strip () == "") {
                         var dir = Path.get_dirname (uri);
                         if (dir != null) {
                             album.title = Path.get_basename (dir);
@@ -122,7 +122,7 @@ public class Services.TagManager : GLib.Object {
                         artist.name = o;
                     }
 
-                    if (artist.name.strip () == "") {
+                    if (artist.name == null || artist.name.strip () == "") {
                         var dir = Path.get_dirname (Path.get_dirname (uri));
                         if (dir != null) {
                             artist.name = GLib.Uri.unescape_string (Path.get_basename (dir));

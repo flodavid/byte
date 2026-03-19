@@ -31,7 +31,7 @@ public class Services.Lastfm : GLib.Object {
     }
 
     public void get_current_artist_cover (Objects.Track track) {        
-        if (track.artist_name.strip () != "") {
+        if (track.artist_name != null && track.artist_name.strip () != "") {
             string url = ROOT_URL;
             url = url + "?method=artist.getinfo";
             url = url + "&api_key=" + API_KEY;
