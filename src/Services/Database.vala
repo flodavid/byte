@@ -451,7 +451,7 @@ public class Services.Database : GLib.Object {
         assert (res == Sqlite.OK);
 
         if (stmt.step () != Sqlite.DONE) {
-            warning ("Error: %d: %s", db.errcode (), db.errmsg ());
+            warning ("Error: %d: %s - While adding %s", db.errcode (), db.errmsg (), track.title);
         }
 
         stmt.reset ();
@@ -477,7 +477,7 @@ public class Services.Database : GLib.Object {
                 return false;
             });
         } else {
-            warning ("Error: %d: %s", db.errcode (), db.errmsg ());
+            warning ("Error: %d: %s - While adding %s", db.errcode (), db.errmsg (), track.title);
             adden_new_track (null);
         }
 
