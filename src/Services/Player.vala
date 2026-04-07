@@ -21,6 +21,7 @@ public class Services.Player : GLib.Object {
 
     Gst.Format fmt = Gst.Format.TIME;
     dynamic Gst.Element playbin;
+    private dynamic Gst.Element rgvolume;
     Gst.Bus bus;
 
     public unowned int64 duration {
@@ -43,6 +44,8 @@ public class Services.Player : GLib.Object {
 
     public Player () {
         playbin = Gst.ElementFactory.make ("playbin", "play");
+        rgvolume = Gst.ElementFactory.make ("rgvolume", "replaygain");
+        playbin.set_property ("audio-filter", rgvolume);
 
         bus = playbin.get_bus ();
         bus.add_watch (0, bus_callback);
